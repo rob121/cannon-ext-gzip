@@ -27,18 +27,19 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macos-latest
+          - macos-15
     steps:
       - name: Checkout extension
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: ${{ env.EXTENSION_NAME }}
 
       - name: Checkout Cannon package
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: rob121/cannon
           path: cannon
+          token: ${{ secrets.CANNON_REPO_TOKEN || github.token }}
 
       - name: Set up Go
         uses: actions/setup-go@v5
