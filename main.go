@@ -16,7 +16,7 @@ const (
 	extensionName        = "cannon-ext-gzip"
 	extensionTitle       = "Gzip Compression"
 	extensionDescription = "Compresses template-rendered HTML responses with gzip through Cannon's onAfterRender hook when browsers advertise gzip support."
-	extensionVersion     = "0.1.0"
+	extensionVersion     = "0.1.1"
 	updateURLBase        = "https://github.com/rob121/cannon-ext-gzip/releases/download"
 	onAfterRender        = "onAfterRender"
 )
