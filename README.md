@@ -1,29 +1,47 @@
 # Cannon Gzip Extension
 
-This extension subscribes to Cannon's `onAfterRender` hook and returns a gzip-compressed response body when the request advertises `Accept-Encoding: gzip`.
+Compresses rendered Cannon responses with gzip by subscribing to Cannon's `onAfterRender` hook.
 
-## Cannon Hook Contract
+## Features
 
-Cannon's `onAfterRender` hook must behave like a final response mutation hook:
+- Compresses text-like responses when the browser advertises `Accept-Encoding: gzip`.
+- Skips responses that already have a `Content-Encoding` header.
+- Returns gzip bytes through Cannon's hook response contract using base64 encoding.
+- Sets `Content-Encoding: gzip`, `Vary: Accept-Encoding`, and `Content-Length`.
 
-1. Render the page/layout into a buffer first.
-2. Fire `onAfterRender` before writing to the client.
-3. Include hook arguments:
-   - `headers`
-   - `body`
-   - `layout`
-   - `page`
-4. Apply returned hook arguments:
-   - `body` replaces the response body as UTF-8 text.
-   - `body_base64` replaces the response body as binary bytes.
-   - `body_encoding: "base64"` identifies base64 binary payloads.
-   - `headers` are merged into the outgoing response headers.
+## Cannon Capabilities
 
-The base64 path is necessary because extension hooks are JSON over a Unix socket, and gzip output is binary.
+This extension exposes:
 
-## Behavior
+- `/meta`: extension name, description, version, and update URL base.
+- `/capabilities`: hook capability.
+- `/hooks`: subscribes to `onAfterRender`.
 
-- Skips requests that do not include `Accept-Encoding: gzip`.
-- Skips responses that already have a `Content-Encoding`.
-- Compresses text-like content types such as HTML, JSON, XML, JavaScript, SVG, and other `text/*` responses.
-- Returns `Content-Encoding: gzip`, `Vary: Accept-Encoding`, `Content-Length`, and a base64-encoded compressed body.
+## Hook Behavior
+
+Cannon should fire `onAfterRender` after rendering the response body and before writing it to the client. The extension expects hook arguments such as:
+
+- `headers`
+- `body`
+- `layout`
+- `page`
+
+When compression is applied, the extension returns:
+
+- `body_base64`: gzipped response body.
+- `body_encoding: "base64"`: identifies binary payload encoding.
+- `headers`: response headers to merge into the outgoing response.
+
+## Configuration
+
+No configuration is required.
+
+## Releases
+
+The extension reports:
+
+- Name: `cannon-ext-gzip`
+- Version: `0.1.1`
+- Update URL base: `https://github.com/rob121/cannon-ext-gzip/releases/download`
+
+GitHub releases should include a `cannon-extension.json` manifest plus platform binaries.
